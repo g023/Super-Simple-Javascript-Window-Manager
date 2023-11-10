@@ -1,0 +1,289 @@
+<!-- 
+    program: Super Simple Javascript Window Manager
+    license: BSD 3-Clause License (https://opensource.org/licenses/BSD-3-Clause)
+    version: 0.1a
+    description: A simple minimalist window manager for javascript that uses jquery, jquery-ui.
+    tested with: jquery v3.5.1, jquery-ui v1.13.0
+    author: https://github.com/g023
+    url: https://github.com/g023/Super-Simple-Javascript-Window-Manager
+    
+    categories in order of relevance: javascript, jquery, jquery-ui, window manager, window, javascript, dialog, gui, user interface, frontend
+    
+    a short bit about:
+        This is a simple minimalist window manager that uses jquery, jquery-ui. It allows you to create draggable, resizable windows with close buttons. 
+        It also allows you to focus windows, set css, and set content. Intention is to keep things simple and easy to understand. Manipulations mostly handled with CSS.
+    
+    features:
+        - draggable windows
+        - resizable windows
+        - closeable windows
+        - focus window
+        - set css
+        - set content
+    
+    usage:
+            // first include js for class WM_Window then... 
+            <script src="Simple_Window.js"></script>
+
+            <script>
+                // create our window object
+                const window1 = new WM_Window(name, '<p>Content of ' + name + '</p>');
+                // initialize and show window   
+                window1.createWindow(name);
+                // set width and height
+                window1.setCss('width', 400);
+                window1.setCss('height', 100);
+                // random x y position
+                const x = Math.floor(Math.random() * 200 + 200);
+                const y = Math.floor(Math.random() * 200 + 200);
+                window1.setCss('top', x);
+                window1.setCss('left', y);
+                // replace content
+                window1.setContent('<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>');
+                // force focus
+                window1.focusWindow();
+            </script>
+
+-->
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+
+            background-color:#555;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: #fff;
+            border: 3px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            padding-top: 20px;
+            z-index:91;
+
+            box-shadow: 3px 3px 15px #000;
+
+            overflow: hidden;
+
+            border-radius: 10px;
+        }
+
+        .drag-handle {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+
+            width: 100%;
+            height: 25px;
+            background: #ccc;
+            border-bottom: 1px solid #bbb;
+            /* cursor: move; */
+            /* disable text selection */
+            -webkit-user-select: none;
+            /* Safari 3.1+ */
+            -moz-user-select: none;
+            /* Firefox 2+ */
+            -ms-user-select: none;
+            /* IE 10+ */
+            -o-user-select: none;
+            user-select: none;
+
+            border-bottom:1px solid #555;
+
+
+        }
+
+        .drag-handle:hover {
+            background: #aaa;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            background: #aaa;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+
+            font-size: 0.5em;
+            border: 1px solid #eee;
+            /* disable text selection */
+            -webkit-user-select: none;
+            /* Safari 3.1+ */
+            -moz-user-select: none;
+            /* Firefox 2+ */
+            -ms-user-select: none;
+            /* IE 10+ */
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        .close-button:hover {
+            background: rgb(152, 147, 224);
+
+            /* make floating effect */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+
+
+        }
+
+        .close-button:active {
+            background: #272727;
+        }
+
+        p {
+            margin: 0;
+            padding: 10px;
+        }
+
+        .content {
+            border: 1px solid #ccc;
+            height: 100%;
+
+            /* overflow: scroll; */
+            /* only show scroll bars if we need to */
+            overflow: auto;
+
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px inset, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+
+            /* expand height to fill window */
+            /* height: calc(100% - 25px); */
+            height: calc(100%);
+            
+        }
+
+        .window-title {
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            pointer-events: none;
+        }
+
+        .isfocused {
+            border: 3px solid rgb(81, 78, 236);
+
+
+        }
+
+        .isfocused .drag-handle {
+            background: #333;
+        }
+
+        .isfocused .window-title {
+            color: #fff;
+        }
+    </style>
+
+    <script src="Simple_Window.js"></script>
+</head>
+
+<body>
+
+    <script>
+        // Usage example
+        const window1 = new Simple_Window('Window 1', '<p>Content of Window 1</p>');
+        window1.createWindow('bob');
+        window1.setCss('width', 400);
+        window1.setCss('height', 100);
+
+
+        const window2 = new Simple_Window('Window 2', '<p>Content of Window 2</p>');
+        window2.createWindow('sue');
+        window2.setCss('left', 400);
+        window2.setCss('top', 400);
+
+
+        const window3 = new Simple_Window('Window 3', '<p>Content of Window 3</p>');
+        window3.createWindow('Erin');
+        window3.setCss('left', 300);
+        window3.setCss('top', 200);
+
+    </script>
+
+    <!-- example using a button -->
+    <style>
+        button {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            height:3em;
+        }
+    </style>
+    <script>
+
+        function makewindow(name) {
+
+            const window1 = new Simple_Window(name, '<p>Content of ' + name + '</p>');
+
+            window1.createWindow(name);
+            window1.setCss('width', 400);
+            window1.setCss('height', 100);
+            // random y position
+            const x = Math.floor(Math.random() * 200 + 200);
+            const y = Math.floor(Math.random() * 200 + 200);
+            window1.setCss('top', x);
+            window1.setCss('left', y);
+            window1.setContent('<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>');
+
+            window1.focusWindow();
+
+        }
+
+    </script>
+
+    <button onclick="makewindow('bob');">Create Window 1</button>
+    <!-- END button example-->
+
+    <!-- begin clock example -->
+    <!-- load a _window.clock.html and add its code to a window using jquery data -->
+    <script>
+        $(document).ready(function() {
+            $.get('_window.clock.html', function(data) {
+                const window1 = new Simple_Window('Clock');
+                window1.createWindow('clock');
+                window1.setCss('width', 330);
+                window1.setCss('height', 330);
+                window1.setCss('top', 100);
+                window1.setCss('left', 100);
+                window1.setContent('<p>'+data+'</p>');
+                window1.focusWindow();
+            });
+        });
+    </script>
+    <!-- end clock example -->
+
+    <!-- embed a youtube-->
+    <script>
+        $(document).ready(function() {
+            $.get('_window.yt.html', function(data) { // use jquery to load from a file
+                const window1 = new Simple_Window('Youtube Example');
+                window1.createWindow('youtube');
+                window1.setCss('width', 600);
+                window1.setCss('height', 400);
+                window1.setCss('top', 100);
+                window1.setCss('left', 500);
+                window1.setContent('<p>'+data+'</p>');
+                window1.focusWindow();
+            });
+        });
+    </script>
+    <!-- end embed a youtube -->
+
+</body>
+</html>

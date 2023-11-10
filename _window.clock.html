@@ -1,0 +1,33 @@
+
+<svg id="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="300" height="300">
+    <circle cx="50" cy="50" r="45" stroke="black" stroke-width="2" fill="white"/>
+    <line id="hourHand" x1="50" y1="50" x2="50" y2="25" stroke="black" stroke-width="3"/>
+    <line id="minuteHand" x1="50" y1="50" x2="50" y2="15" stroke="black" stroke-width="4"/>
+    <line id="secondHand" x1="50" y1="50" x2="50" y2="15" stroke="red" stroke-width="2"/>
+
+    <!-- make a dot for center-->
+    <circle cx="50" cy="50" r="2" stroke="black" stroke-width="1" fill="#ccc"/>
+ </svg>
+ 
+ <script>
+    function updateClock() {
+    let currentTime = new Date();
+    let currentHours = currentTime.getHours();
+    let currentMinutes = currentTime.getMinutes();
+    let currentSeconds = currentTime.getSeconds();
+    let currentMilliseconds = currentTime.getMilliseconds();
+    let currentRotationSeconds = currentSeconds * 6;
+    let currentRotationMinutes = currentMinutes * 6;
+    let currentRotationHours = currentHours * 30 + currentMinutes * 0.5;
+    let currentRotationMilliseconds = currentMilliseconds * 0.36;
+    document.getElementById("secondHand").setAttribute("transform", "rotate(" + currentRotationSeconds + " 50 50)");
+    document.getElementById("minuteHand").setAttribute("transform", "rotate(" + currentRotationMinutes + " 50 50)");
+    document.getElementById("hourHand").setAttribute("transform", "rotate(" + currentRotationHours + " 50 50)");
+
+
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+ </script>
