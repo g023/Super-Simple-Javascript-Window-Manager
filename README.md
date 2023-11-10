@@ -21,6 +21,8 @@ A simple minimalist window manager for javascript that uses jquery, jquery-ui.
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
+<link rel="stylesheet" href="Simple_Window.Theme.Default.css">
+
 <script src="Simple_Window.js"></script>
 
 <script>
